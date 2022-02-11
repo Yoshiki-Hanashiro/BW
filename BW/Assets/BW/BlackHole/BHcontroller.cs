@@ -17,7 +17,7 @@ public class BHcontroller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        float radius_break = MASS / 0.1f;//円形の当たり判定の半径を決定する。重力の影響が十分に小さくなるまで
+        float radius_break = MASS / 0.01f;//円形の当たり判定の半径を決定する。重力の影響が十分に小さくなるまで
         collision_radius = Mathf.Sqrt(radius_break);
         CircleCollider2D col = this.gameObject.GetComponent<CircleCollider2D>();
         col.radius = collision_radius;
