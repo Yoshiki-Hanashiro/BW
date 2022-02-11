@@ -4,17 +4,13 @@ using UnityEngine;
 
 public class WHcontroller : MonoBehaviour
 {
-    //ホワイトホールの反重力　g=-M/r^2 (惑星の重さをBHからの距離の2乗で割る)
-    private float MASS = 10;
-    float collision_radius;
-    float newtonian = 10;
+    //標準正規分布でホワイトホールの半重力を決める
+    public float sigma = 0.5f;//下げると尖る
+    public float newtonian = 500f;//上げると強くなる
     // Start is called before the first frame update
     void Start()
     {
-        float radius_break = MASS / 0.01f;//円形の当たり判定の半径を決定する。重力の影響が十分に小さくなるまで
-        collision_radius = Mathf.Sqrt(radius_break);
-        CircleCollider2D col = this.gameObject.GetComponent<CircleCollider2D>();
-        col.radius = collision_radius;
+
     }
 
     // Update is called once per frame
@@ -27,12 +23,12 @@ public class WHcontroller : MonoBehaviour
     {
         if (collision.gameObject.tag == "Geffect")
         {
-            Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
             GameObject go = collision.gameObject;
+            Rigidbody2D rb = go.GetComponent<Rigidbody2D>();
             float r = Vector2.Distance(go.transform.position, transform.position);
-            float gravity = -MASS / (r * r);
+            float gravity = -(newtonian / (Mathf.Sqrt(2 * Mathf.PI) * sigma)) * Mathf.Exp(-Mathf.Pow(r, 2) / (2 * sigma * sigma));
             Vector2 XYgravity = new Vector2(Mathf.Cos(GetAngle(go.transform.position, transform.position)) * gravity, Mathf.Sin(GetAngle(go.transform.position, transform.position)) * gravity);
-            rb.AddForce(XYgravity * newtonian);
+            rb.AddForce(XYgravity);
         }
     }
 
