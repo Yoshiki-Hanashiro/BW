@@ -5,8 +5,8 @@ using UnityEngine;
 public class BHcontroller : MonoBehaviour
 {
     //標準正規分布
-    private float sigma = 1f;//下げると尖る
-    private float newtonian = 300f;//上げると強くなる
+    public float sigma = 1.1f;//下げると尖る
+    public float newtonian = 500f;//上げると強くなる
     //ブラックホールの重力　g=M/r^2 (惑星の重さをBHからの距離の2乗で割る)
     private float MASS = 10;
     float collision_radius;
