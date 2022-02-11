@@ -8,12 +8,8 @@ public class BHcontroller : MonoBehaviour
     private float MASS = 10;
     float collision_radius;
     float newtonian = 10;
-    /*
-     円形の当たり判定を作る。（範囲は、重力の影響がほぼ0になる場所まで。）
-    範囲に入った動的オブジェクトをリスト化し、全てに係る重力を計算
-    重力をX方向、Y方向に分解。
-    Addforceする。
-     */
+    //物質転送
+    public GameObject loopHole;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,12 +29,16 @@ public class BHcontroller : MonoBehaviour
     {
         if (collision.gameObject.tag == "Geffect")
         {
-            Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
             GameObject go = collision.gameObject;
+            Rigidbody2D rb = go.GetComponent<Rigidbody2D>();
             float r = Vector2.Distance(go.transform.position, transform.position);
             float gravity = MASS / (r * r);
             Vector2 XYgravity = new Vector2(Mathf.Cos(GetAngle(go.transform.position,transform.position))*gravity, Mathf.Sin(GetAngle(go.transform.position, transform.position)) * gravity);
             rb.AddForce(XYgravity* newtonian);
+            if (gravity > 10)
+            {
+                go.transform.position = loopHole.transform.position;
+            }
         }
     }
 
