@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class BHcontroller : MonoBehaviour
 {
+    //標準正規分布
+    private float sigma = 1f;//下げると尖る
+    private float newtonian = 300f;//上げると強くなる
     //ブラックホールの重力　g=M/r^2 (惑星の重さをBHからの距離の2乗で割る)
     private float MASS = 10;
     float collision_radius;
-    float newtonian = 10;
     //物質転送
     public GameObject loopHole;
     // Start is called before the first frame update
@@ -22,7 +24,6 @@ public class BHcontroller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -32,12 +33,14 @@ public class BHcontroller : MonoBehaviour
             GameObject go = collision.gameObject;
             Rigidbody2D rb = go.GetComponent<Rigidbody2D>();
             float r = Vector2.Distance(go.transform.position, transform.position);
-            float gravity = MASS / (r * r);
+            //float gravity = MASS / (r * r);
+            float gravity = (newtonian / (Mathf.Sqrt(2 * Mathf.PI) * sigma)) * Mathf.Exp(-Mathf.Pow(r, 2) / (2 * sigma * sigma));
             Vector2 XYgravity = new Vector2(Mathf.Cos(GetAngle(go.transform.position,transform.position))*gravity, Mathf.Sin(GetAngle(go.transform.position, transform.position)) * gravity);
-            rb.AddForce(XYgravity* newtonian);
+            rb.AddForce(XYgravity);
+            Debug.Log(gravity);
             if (gravity > 10)
             {
-                go.transform.position = loopHole.transform.position;
+                //go.transform.position = loopHole.transform.position;
             }
         }
     }
