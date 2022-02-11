@@ -22,9 +22,8 @@ public class PlayerController : MonoBehaviour
             float currentSpeed = speed - rb.velocity.magnitude;
             rb.AddForce(new Vector2(currentSpeed*move,0));
         }
-        if (move == 0)
+        if (move == 0 && grounding==true)
         {
-            Debug.Log(rb.velocity.x);
             rb.AddForce(new Vector2(rb.velocity.x * -grip,0));
         }
     }
