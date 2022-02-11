@@ -2,18 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BHcontroller : MonoBehaviour
+public class WHcontroller : MonoBehaviour
 {
-    //ブラックホールの重力　g=M/r^2 (惑星の重さをBHからの距離の2乗で割る)
+    //ホワイトホールの反重力　g=-M/r^2 (惑星の重さをBHからの距離の2乗で割る)
     private float MASS = 10;
     float collision_radius;
     float newtonian = 10;
-    /*
-     円形の当たり判定を作る。（範囲は、重力の影響がほぼ0になる場所まで。）
-    範囲に入った動的オブジェクトをリスト化し、全てに係る重力を計算
-    重力をX方向、Y方向に分解。
-    Addforceする。
-     */
     // Start is called before the first frame update
     void Start()
     {
@@ -26,7 +20,7 @@ public class BHcontroller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -36,9 +30,9 @@ public class BHcontroller : MonoBehaviour
             Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
             GameObject go = collision.gameObject;
             float r = Vector2.Distance(go.transform.position, transform.position);
-            float gravity = MASS / (r * r);
-            Vector2 XYgravity = new Vector2(Mathf.Cos(GetAngle(go.transform.position,transform.position))*gravity, Mathf.Sin(GetAngle(go.transform.position, transform.position)) * gravity);
-            rb.AddForce(XYgravity* newtonian);
+            float gravity = -MASS / (r * r);
+            Vector2 XYgravity = new Vector2(Mathf.Cos(GetAngle(go.transform.position, transform.position)) * gravity, Mathf.Sin(GetAngle(go.transform.position, transform.position)) * gravity);
+            rb.AddForce(XYgravity * newtonian);
         }
     }
 
