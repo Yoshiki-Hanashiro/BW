@@ -32,6 +32,7 @@ public class BHcontroller : MonoBehaviour
             if (r <0.5f)
             {
                 go.transform.position = loopHole.transform.position;
+                rb.velocity = rb.velocity / 10;
             }
         }
     }
