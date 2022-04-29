@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class BWCharaInitialize : MonoBehaviour
 {
@@ -20,26 +21,41 @@ public class BWCharaInitialize : MonoBehaviour
     public GameObject leftHand;
 
     //裾部分の布表現
+    private float HemDamping = 0.5f;
+    private float HemFrequency = 1.5f;
+    private float backHemDamping = 1f;
+    private float backHemFrequency = 4f;
+
     public GameObject[] frontHem;
     public GameObject[] backHem;
+    public GameObject bottomBody;
+    private Vector2 frontHemAnchor = new Vector2(4.78f, 0f);
+    private Vector2 backHemAnchor = new Vector2(2f, 0f);
+
+    public SpriteBone bone;
     // Start is called before the first frame update
     void Start()
     {
         //腕の布のボーン
         for(int armCount = 0; armCount < rightArmCloth.Length; armCount++)
         {
+            //先端以外にfixedJointをつけていく
             if(armCount == rightArmCloth.Length - 1)
             {
+                //先端だけRigidbodyをつける
                 rightArmCloth[armCount].AddComponent<Rigidbody2D>();
                 leftArmCloth[armCount].AddComponent<Rigidbody2D>();
                 for (int i = rightArmCloth.Length - 2; i >= 0; i--)
                 {
+                    //それぞれのパラメータを設定。
+                    //ボーン同士をつなげる、減衰比、バネの強さ、アンカー座標、自動アンカー調整機能オフを設定
                     FixedJoint2D fixedjoint = rightArmCloth[i].GetComponent<FixedJoint2D>();
                     fixedjoint.connectedBody = rightArmCloth[i + 1].GetComponent<Rigidbody2D>();
                     fixedjoint.dampingRatio = ArmClothDamping;
                     fixedjoint.frequency = ArmClothFrequency;
                     fixedjoint.anchor = new Vector2(Vector2.Distance(rightArmCloth[i + 1].transform.position, rightArmCloth[i].transform.position), 0);
                     fixedjoint.autoConfigureConnectedAnchor = false;
+                    fixedjoint.enableCollision = true;
 
                     fixedjoint = leftArmCloth[i].GetComponent<FixedJoint2D>();
                     fixedjoint.connectedBody = leftArmCloth[i + 1].GetComponent<Rigidbody2D>();
@@ -65,7 +81,7 @@ public class BWCharaInitialize : MonoBehaviour
         FixedJoint2D rightHandfixed = rightHand.AddComponent<FixedJoint2D>();
         rightHandfixed.connectedBody = rightArmCloth[rightArmCloth.Length-1].GetComponent<Rigidbody2D>();
         rightHandfixed.dampingRatio = ArmClothDamping;
-        rightHandfixed.frequency = ArmClothFrequency;
+        rightHandfixed.frequency = 0.0001f;
         rightHandfixed.anchor = handAnchor;
         rightHandfixed.autoConfigureConnectedAnchor = false;
         rightHand.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
@@ -81,10 +97,61 @@ public class BWCharaInitialize : MonoBehaviour
         FixedJoint2D leftHandfixed = leftHand.AddComponent<FixedJoint2D>();
         leftHandfixed.connectedBody = leftArmCloth[rightArmCloth.Length - 1].GetComponent<Rigidbody2D>();
         leftHandfixed.dampingRatio = ArmClothDamping;
-        leftHandfixed.frequency = ArmClothFrequency;
+        leftHandfixed.frequency = 0.0001f;
         leftHandfixed.anchor = handAnchor;
         leftHandfixed.autoConfigureConnectedAnchor = false;
         leftHand.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+
+
+        //裾のボーン
+        for(int backHemCount = 0; backHemCount < backHem.Length; backHemCount++)
+        {
+            //先端以外にfixedJointをつけていく
+            if (backHemCount == backHem.Length - 1)
+            {
+                //先端だけRigidbodyをつける
+                backHem[backHemCount].AddComponent<Rigidbody2D>();
+                for (int i = backHem.Length - 2; i >= 0; i--)
+                {
+                    //それぞれのパラメータを設定。
+                    //ボーン同士をつなげる、減衰比、バネの強さ、アンカー座標、自動アンカー調整機能オフを設定
+                    FixedJoint2D fixedjoint = backHem[i].GetComponent<FixedJoint2D>();
+                    fixedjoint.connectedBody = backHem[i + 1].GetComponent<Rigidbody2D>();
+                    fixedjoint.dampingRatio = HemDamping;
+                    fixedjoint.frequency = HemFrequency;
+                    fixedjoint.anchor = new Vector2(Vector2.Distance(backHem[i + 1].transform.position, backHem[i].transform.position), 0);
+                    fixedjoint.autoConfigureConnectedAnchor = false;
+                }
+                break;
+            }
+            backHem[backHemCount].AddComponent<FixedJoint2D>();
+        }
+        //裾のボーンを吊り下げる
+        FixedJoint2D bottomBodyfixed = bottomBody.AddComponent<FixedJoint2D>();
+        bottomBodyfixed.connectedBody = backHem[0].GetComponent<Rigidbody2D>();
+        bottomBodyfixed.dampingRatio = backHemDamping;
+        bottomBodyfixed.frequency = backHemFrequency;
+        bottomBodyfixed.anchor = backHemAnchor;
+        bottomBodyfixed.autoConfigureConnectedAnchor = false;
+        bottomBody.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+        
+        FixedJoint2D frohtHemfixed = frontHem[frontHem.Length-1].AddComponent<FixedJoint2D>();
+        frohtHemfixed.connectedBody = backHem[backHem.Length - 1].GetComponent<Rigidbody2D>();
+        frohtHemfixed.dampingRatio = HemDamping;
+        frohtHemfixed.frequency = HemFrequency;
+        frohtHemfixed.anchor = frontHemAnchor;
+        frohtHemfixed.autoConfigureConnectedAnchor = false;
+        frontHem[frontHem.Length - 1].GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+
+    }
+
+    void Update()
+    {
+        //ボーンの角度制限とかの動作ルールを記述する予定
+        Debug.Log(rightUpArm.transform.rotation.eulerAngles);
+        //真横は真下
+        //真下は左下
+        //真上は右下
     }
 
 }
