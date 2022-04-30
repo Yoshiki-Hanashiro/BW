@@ -6,18 +6,20 @@ using UnityEngine.U2D;
 public class BWCharaInitialize : MonoBehaviour
 {
     //振袖部分の布表現
-    private float ArmClothDamping = 0.5f;
+    private float ArmClothDamping = 0f;
     private float ArmClothFrequency = 1.5f;
 
-    private Vector2 upArmAnchor = new Vector2(-0.2993939f, -1.763251f);
+    //private Vector2 upArmAnchor = new Vector2(-0.2993939f, -1.763251f);
     private Vector2 handAnchor = new Vector2(0.1634932f, -0.5892799f);
 
     public GameObject[] rightArmCloth;
     public GameObject rightUpArm;
+    public GameObject rightArmClothSP;
     public GameObject rightHand;
 
     public GameObject[] leftArmCloth;
     public GameObject leftUpArm;
+    public GameObject leftArmClothSP;
     public GameObject leftHand;
 
     //裾部分の布表現
@@ -32,7 +34,6 @@ public class BWCharaInitialize : MonoBehaviour
     private Vector2 frontHemAnchor = new Vector2(4.78f, 0f);
     private Vector2 backHemAnchor = new Vector2(2f, 0f);
 
-    public SpriteBone bone;
     // Start is called before the first frame update
     void Start()
     {
@@ -70,13 +71,13 @@ public class BWCharaInitialize : MonoBehaviour
             leftArmCloth[armCount].AddComponent<FixedJoint2D>();
         }
         //腕の布のボーンを吊り下げる
-        FixedJoint2D rightArmfixed = rightUpArm.AddComponent<FixedJoint2D>();
+        FixedJoint2D rightArmfixed = rightArmClothSP.AddComponent<FixedJoint2D>();
         rightArmfixed.connectedBody = rightArmCloth[0].GetComponent<Rigidbody2D>();
         rightArmfixed.dampingRatio = ArmClothDamping;
         rightArmfixed.frequency = ArmClothFrequency;
-        rightArmfixed.anchor = upArmAnchor;
+        rightArmfixed.anchor = new Vector2(Vector2.Distance(rightArmCloth[0].transform.position, rightArmClothSP.transform.position), 0);
         rightArmfixed.autoConfigureConnectedAnchor = false;
-        rightUpArm.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+        rightArmClothSP.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
 
         FixedJoint2D rightHandfixed = rightHand.AddComponent<FixedJoint2D>();
         rightHandfixed.connectedBody = rightArmCloth[rightArmCloth.Length-1].GetComponent<Rigidbody2D>();
@@ -86,13 +87,13 @@ public class BWCharaInitialize : MonoBehaviour
         rightHandfixed.autoConfigureConnectedAnchor = false;
         rightHand.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
 
-        FixedJoint2D leftArmfixed = leftUpArm.AddComponent<FixedJoint2D>();
+        FixedJoint2D leftArmfixed = leftArmClothSP.AddComponent<FixedJoint2D>();
         leftArmfixed.connectedBody = leftArmCloth[0].GetComponent<Rigidbody2D>();
         leftArmfixed.dampingRatio = ArmClothDamping;
         leftArmfixed.frequency = ArmClothFrequency;
-        leftArmfixed.anchor = upArmAnchor;
+        leftArmfixed.anchor = new Vector2(Vector2.Distance(leftArmCloth[0].transform.position, leftArmClothSP.transform.position), 0);
         leftArmfixed.autoConfigureConnectedAnchor = false;
-        leftUpArm.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+        leftArmClothSP.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
 
         FixedJoint2D leftHandfixed = leftHand.AddComponent<FixedJoint2D>();
         leftHandfixed.connectedBody = leftArmCloth[rightArmCloth.Length - 1].GetComponent<Rigidbody2D>();
@@ -147,11 +148,6 @@ public class BWCharaInitialize : MonoBehaviour
 
     void Update()
     {
-        //ボーンの角度制限とかの動作ルールを記述する予定
-        Debug.Log(rightUpArm.transform.rotation.eulerAngles);
-        //真横は真下
-        //真下は左下
-        //真上は右下
-    }
 
+    }
 }
