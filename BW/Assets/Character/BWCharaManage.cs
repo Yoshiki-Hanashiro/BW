@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
-
-public class BWCharaInitialize : MonoBehaviour
+//キャラの初期設定と、ボーンルールの設定
+public class BWCharaManage : MonoBehaviour
 {
     //振袖部分の布表現
     private float ArmClothDamping = 0f;
@@ -12,15 +12,45 @@ public class BWCharaInitialize : MonoBehaviour
     //private Vector2 upArmAnchor = new Vector2(-0.2993939f, -1.763251f);
     private Vector2 handAnchor = new Vector2(0.1634932f, -0.5892799f);
 
-    public GameObject[] rightArmCloth;
-    public GameObject rightUpArm;
-    public GameObject rightArmClothSP;
-    public GameObject rightHand;
+    //ボーン
+    public GameObject root;
+    public GameObject head;
+    public GameObject upBody;
+    public GameObject bottomBody;
+    public GameObject frontUpHood;
+    public GameObject frontBottomHood;
+    public GameObject backUpHood;
+    public GameObject backBottomHood;
 
-    public GameObject[] leftArmCloth;
+    public GameObject rightUpLeg;
+    public GameObject rightBottomLeg;
+    public GameObject rightFoot;
+    public GameObject rightToe;
+    public GameObject leftUpLeg;
+    public GameObject leftBottomLeg;
+    public GameObject leftFoot;
+    public GameObject leftToe;
+
+    public GameObject rightUpArm;
+    public GameObject rightBottomArm;
+    public GameObject rightArmClothSP;
+    public GameObject[] rightArmCloth;
+    public GameObject rightHand;
+    public GameObject rightFinger;
+    public GameObject rightThumb;
+
     public GameObject leftUpArm;
+    public GameObject leftBottomArm;
     public GameObject leftArmClothSP;
+    public GameObject[] leftArmCloth;
     public GameObject leftHand;
+    public GameObject leftFinger;
+    public GameObject leftThumb;
+
+    public GameObject[] frontHem;
+    public GameObject[] backHem;
+
+
 
     //裾部分の布表現
     private float HemDamping = 0.5f;
@@ -28,17 +58,150 @@ public class BWCharaInitialize : MonoBehaviour
     private float backHemDamping = 1f;
     private float backHemFrequency = 4f;
 
-    public GameObject[] frontHem;
-    public GameObject[] backHem;
-    public GameObject bottomBody;
+
     private Vector2 frontHemAnchor = new Vector2(4.78f, 0f);
     private Vector2 backHemAnchor = new Vector2(2f, 0f);
 
     // Start is called before the first frame update
     void Start()
     {
+        //ボーンをアタッチ
+        root = transform.Find("root").gameObject;
+        bottomBody = root.transform.Find("bottomBody").gameObject;
+        //backHemを取得
+        GameObject tmp = bottomBody.transform.GetChild(0).gameObject;
+        int count = 0;
+        while (true)
+        {
+            try
+            {
+                tmp = tmp.transform.GetChild(0).gameObject;
+            }
+            catch (System.Exception)
+            {
+
+                break;
+            }
+            count++;
+        }
+        backHem = new GameObject[count+1];
+        count = 0;
+        tmp = bottomBody.transform.GetChild(0).gameObject;
+        while (true)
+        {
+            backHem[count] = tmp;
+            try
+            {
+                tmp = tmp.transform.GetChild(0).gameObject;
+            }
+            catch (System.Exception)
+            {
+                break;
+            }
+            count++;
+        }
+
+
+
+        //frontHemを取得
+        tmp = bottomBody.transform.GetChild(1).gameObject;
+        count = 0;
+        while (true)
+        {
+            try
+            {
+                tmp = tmp.transform.GetChild(0).gameObject;
+            }
+            catch (System.Exception)
+            {
+                break;
+            }
+            count++;
+        }
+        frontHem = new GameObject[count + 1];
+        count = 0;
+        tmp = bottomBody.transform.GetChild(1).gameObject;
+        while (true)
+        {
+            frontHem[count] = tmp;
+            try
+            {
+                tmp = tmp.transform.GetChild(0).gameObject;
+            }
+            catch (System.Exception)
+            {
+                break;
+            }
+            count++;
+        }
+        upBody = bottomBody.transform.Find("upBody").gameObject;
+        head = upBody.transform.Find("head").gameObject;
+        frontUpHood = head.transform.Find("frontUpHood").gameObject;
+        frontBottomHood = head.transform.Find("frontBottomHood").gameObject;
+        backUpHood = head.transform.Find("backUpHood").gameObject;
+        backBottomHood = head.transform.Find("backBottomHood").gameObject;
+        leftUpArm = upBody.transform.Find("leftUpArm").gameObject;
+        leftArmClothSP = leftUpArm.transform.Find("leftArmClothSP").gameObject;
+
+
+        leftBottomArm = leftUpArm.transform.Find("leftBottomArm").gameObject;
+        leftHand = leftBottomArm.transform.Find("leftHand").gameObject;
+        leftFinger = leftHand.transform.Find("leftFinger").gameObject;
+        leftThumb = leftHand.transform.Find("leftThumb").gameObject;
+        rightUpArm = upBody.transform.Find("rightUpArm").gameObject;
+        rightArmClothSP = rightUpArm.transform.Find("rightArmClothSP").gameObject;
+        rightArmClothSP = rightUpArm.transform.Find("rightArmClothSP").gameObject;
+        //rightArmClothとletArmClothを取得
+        tmp = leftArmClothSP.transform.GetChild(0).gameObject;
+        count = 0;
+        while (true)
+        {
+            try
+            {
+                tmp = tmp.transform.GetChild(0).gameObject;
+            }
+            catch (System.Exception)
+            {
+
+                break;
+            }
+            count++;
+        }
+        leftArmCloth = new GameObject[count + 1];
+        rightArmCloth = new GameObject[count + 1];
+        count = 0;
+        tmp = leftArmClothSP.transform.GetChild(0).gameObject;
+        GameObject rightTmp = rightArmClothSP.transform.GetChild(0).gameObject;
+        while (true)
+        {
+            leftArmCloth[count] = tmp;
+            rightArmCloth[count] = rightTmp;
+            try
+            {
+                tmp = tmp.transform.GetChild(0).gameObject;
+                rightTmp = rightTmp.transform.GetChild(0).gameObject;
+            }
+            catch (System.Exception)
+            {
+                break;
+            }
+            count++;
+        }
+        rightBottomArm = rightUpArm.transform.Find("rightBottomArm").gameObject;
+        rightHand = rightBottomArm.transform.Find("rightHand").gameObject;
+        rightFinger = rightHand.transform.Find("rightFinger").gameObject;
+        rightThumb = rightHand.transform.Find("rightThumb").gameObject;
+        leftUpLeg = root.transform.Find("leftUpLeg").gameObject;
+        leftBottomLeg = leftUpLeg.transform.Find("leftBottomLeg").gameObject;
+        leftFoot = leftBottomLeg.transform.Find("leftFoot").gameObject;
+        leftToe = leftFoot.transform.Find("leftToe").gameObject;
+        rightUpLeg = root.transform.Find("rightUpLeg").gameObject;
+        rightBottomLeg = rightUpLeg.transform.Find("rightBottomLeg").gameObject;
+        rightFoot = rightBottomLeg.transform.Find("rightFoot").gameObject;
+        rightToe = rightFoot.transform.Find("rightToe").gameObject;
+
         //腕の布のボーン
-        for(int armCount = 0; armCount < rightArmCloth.Length; armCount++)
+        for (int armCount = 0; armCount < rightArmCloth.Length; armCount++)
         {
             //先端以外にfixedJointをつけていく
             if(armCount == rightArmCloth.Length - 1)
