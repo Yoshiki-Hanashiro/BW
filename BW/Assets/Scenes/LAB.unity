@@ -352,11 +352,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -2851108306776224828, guid: b3693a97b6b037f4194e06657af9f6fb, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7674659
+      value: -0.8660254
       objectReference: {fileID: 0}
     - target: {fileID: -2851108306776224828, guid: b3693a97b6b037f4194e06657af9f6fb, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -2851108306776224828, guid: b3693a97b6b037f4194e06657af9f6fb, type: 3}
       propertyPath: m_LocalRotation.y
@@ -364,11 +364,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -2851108306776224828, guid: b3693a97b6b037f4194e06657af9f6fb, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.6410898
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: -2851108306776224828, guid: b3693a97b6b037f4194e06657af9f6fb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 640.254
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: -2154802931949696764, guid: b3693a97b6b037f4194e06657af9f6fb, type: 3}
       propertyPath: m_IsActive
@@ -1162,10 +1162,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 172f4bb8e22912a4989df38282e4d269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  min: -200
-  max: 10
-  normalMin: 0
-  normalMax: 0
+  min: -210
+  max: 30
   parentObject: {fileID: 0}
   reverse: 0
 --- !u!1 &1827641647

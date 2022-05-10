@@ -11,17 +11,17 @@ public class BoneControl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
     }
 
     // Update is called once per frame
     void Update()
     {
 
-
         float rotateZ = UnityEditor.TransformUtils.GetInspectorRotation(transform).z;
         float angleZ = Mathf.Clamp(rotateZ, min,max);
-        Debug.Log(rotateZ + " : " + angleZ);
-        transform.localRotation = Quaternion.Euler(0, 0, angleZ);
+        //Debug.Log(rotateZ + " : " + angleZ);
+        //transform.localRotation = Quaternion.Euler(0, 0, angleZ);
+        Vector3 setAngle = new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, angleZ);
+        UnityEditor.TransformUtils.SetInspectorRotation(transform, setAngle);
     }
 }
