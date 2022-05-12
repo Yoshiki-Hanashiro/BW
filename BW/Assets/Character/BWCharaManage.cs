@@ -68,6 +68,9 @@ public class BWCharaManage : MonoBehaviour
         //ボーンをアタッチ
         root = transform.Find("root").gameObject;
         bottomBody = root.transform.Find("bottomBody").gameObject;
+        BoneControl boneControl = bottomBody.AddComponent<BoneControl>();
+        boneControl.min = -75f;
+        boneControl.max = 30f;
         //backHemを取得
         GameObject tmp = bottomBody.transform.GetChild(0).gameObject;
         int count = 0;
@@ -135,7 +138,7 @@ public class BWCharaManage : MonoBehaviour
             count++;
         }
         upBody = bottomBody.transform.Find("upBody").gameObject;
-        BoneControl boneControl = upBody.AddComponent<BoneControl>();
+        boneControl = upBody.AddComponent<BoneControl>();
         boneControl.min = -40f;
         boneControl.max = 25f;
         head = upBody.transform.Find("head").gameObject;
