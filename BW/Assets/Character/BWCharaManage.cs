@@ -1,15 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.U2D;
 //キャラの初期設定と、ボーンルールの設定
 public class BWCharaManage : MonoBehaviour
 {
     //振袖部分の布表現
-    private float ArmClothDamping = 0f;
+    private float ArmClothDamping = 0.5f;
     private float ArmClothFrequency = 1.5f;
 
-    //private Vector2 upArmAnchor = new Vector2(-0.2993939f, -1.763251f);
     private Vector2 handAnchor = new Vector2(0.1634932f, -0.5892799f);
 
     //ボーン
@@ -61,6 +59,11 @@ public class BWCharaManage : MonoBehaviour
 
     private Vector2 frontHemAnchor = new Vector2(4.78f, 0f);
     private Vector2 backHemAnchor = new Vector2(2f, 0f);
+
+    [SerializeField, Range(0.096f,1f)]
+    public float frontHemShrink;
+    private float FRONT_HEM_RANGE = -13.14225f;
+    //一番上の前面裾の角度→-83 ~ -70
 
     // Start is called before the first frame update
     void Start()
@@ -137,6 +140,7 @@ public class BWCharaManage : MonoBehaviour
             }
             count++;
         }
+
         upBody = bottomBody.transform.Find("upBody").gameObject;
         boneControl = upBody.AddComponent<BoneControl>();
         boneControl.min = -40f;
@@ -200,7 +204,6 @@ public class BWCharaManage : MonoBehaviour
             }
             catch (System.Exception)
             {
-
                 break;
             }
             count++;
@@ -385,6 +388,11 @@ public class BWCharaManage : MonoBehaviour
 
     void Update()
     {
+        frontHem[0].transform.localEulerAngles = new Vector3(0, 0, -70 + FRONT_HEM_RANGE * frontHemShrink);
+        for (int i = 1; i < frontHem.Length; i++)
+        {
+            frontHem[i].transform.localEulerAngles = new Vector3(0, 0, FRONT_HEM_RANGE * frontHemShrink);
+        }
 
     }
 }
