@@ -135,22 +135,39 @@ public class BWCharaManage : MonoBehaviour
             count++;
         }
         upBody = bottomBody.transform.Find("upBody").gameObject;
+        BoneControl boneControl = upBody.AddComponent<BoneControl>();
+        boneControl.min = -10;
+        boneControl.max = 10;
         head = upBody.transform.Find("head").gameObject;
+        boneControl = head.AddComponent<BoneControl>();
+        boneControl.min = -10;
+        boneControl.max = 10;
         frontUpHood = head.transform.Find("frontUpHood").gameObject;
+        boneControl = frontUpHood.AddComponent<BoneControl>();
         frontBottomHood = head.transform.Find("frontBottomHood").gameObject;
+        boneControl = frontBottomHood.AddComponent<BoneControl>();
         backUpHood = head.transform.Find("backUpHood").gameObject;
+        boneControl = backUpHood.AddComponent<BoneControl>();
         backBottomHood = head.transform.Find("backBottomHood").gameObject;
+        boneControl = backBottomHood.AddComponent<BoneControl>();
         leftUpArm = upBody.transform.Find("leftUpArm").gameObject;
+        boneControl = leftUpArm.AddComponent<BoneControl>();
         leftArmClothSP = leftUpArm.transform.Find("leftArmClothSP").gameObject;
+        boneControl = leftArmClothSP.AddComponent<BoneControl>();
 
 
         leftBottomArm = leftUpArm.transform.Find("leftBottomArm").gameObject;
+        boneControl = leftBottomArm.AddComponent<BoneControl>();
         leftHand = leftBottomArm.transform.Find("leftHand").gameObject;
+        boneControl = leftHand.AddComponent<BoneControl>();
         leftFinger = leftHand.transform.Find("leftFinger").gameObject;
+        boneControl = leftFinger.AddComponent<BoneControl>();
         leftThumb = leftHand.transform.Find("leftThumb").gameObject;
+        boneControl = leftThumb.AddComponent<BoneControl>();
         rightUpArm = upBody.transform.Find("rightUpArm").gameObject;
+        boneControl = rightUpArm.AddComponent<BoneControl>();
         rightArmClothSP = rightUpArm.transform.Find("rightArmClothSP").gameObject;
-        rightArmClothSP = rightUpArm.transform.Find("rightArmClothSP").gameObject;
+        boneControl = rightArmClothSP.AddComponent<BoneControl>();
         //rightArmClothÇ∆letArmClothÇéÊìæ
         tmp = leftArmClothSP.transform.GetChild(0).gameObject;
         count = 0;
@@ -188,17 +205,29 @@ public class BWCharaManage : MonoBehaviour
             count++;
         }
         rightBottomArm = rightUpArm.transform.Find("rightBottomArm").gameObject;
+        boneControl = rightBottomArm.AddComponent<BoneControl>();
         rightHand = rightBottomArm.transform.Find("rightHand").gameObject;
+        boneControl = rightHand.AddComponent<BoneControl>();
         rightFinger = rightHand.transform.Find("rightFinger").gameObject;
+        boneControl = rightFinger.AddComponent<BoneControl>();
         rightThumb = rightHand.transform.Find("rightThumb").gameObject;
+        boneControl = rightThumb.AddComponent<BoneControl>();
         leftUpLeg = root.transform.Find("leftUpLeg").gameObject;
+        boneControl = leftUpLeg.AddComponent<BoneControl>();
         leftBottomLeg = leftUpLeg.transform.Find("leftBottomLeg").gameObject;
+        boneControl = leftBottomLeg.AddComponent<BoneControl>();
         leftFoot = leftBottomLeg.transform.Find("leftFoot").gameObject;
+        boneControl = leftFoot.AddComponent<BoneControl>();
         leftToe = leftFoot.transform.Find("leftToe").gameObject;
+        boneControl = leftToe.AddComponent<BoneControl>();
         rightUpLeg = root.transform.Find("rightUpLeg").gameObject;
+        boneControl = rightUpLeg.AddComponent<BoneControl>();
         rightBottomLeg = rightUpLeg.transform.Find("rightBottomLeg").gameObject;
+        boneControl = rightBottomLeg.AddComponent<BoneControl>();
         rightFoot = rightBottomLeg.transform.Find("rightFoot").gameObject;
+        boneControl = rightFoot.AddComponent<BoneControl>();
         rightToe = rightFoot.transform.Find("rightToe").gameObject;
+        boneControl = rightToe.AddComponent<BoneControl>();
 
         //òrÇÃïzÇÃÉ{Å[Éì
         for (int armCount = 0; armCount < rightArmCloth.Length; armCount++)
