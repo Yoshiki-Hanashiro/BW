@@ -63,7 +63,7 @@ public class BWCharaManage : MonoBehaviour
     [SerializeField, Range(0.096f,1f)]
     public float frontHemShrink;
     private float FRONT_HEM_RANGE = -13.14225f;
-    //àÍî‘è„ÇÃëOñ êûÇÃäpìxÅ®-83 ~ -70
+
 
     // Start is called before the first frame update
     void Start()
@@ -248,6 +248,7 @@ public class BWCharaManage : MonoBehaviour
         boneControl = leftUpLeg.AddComponent<BoneControl>();
         boneControl.min = 150f;
         boneControl.max = 300f;
+        boneControl.parentObject = bottomBody;
         leftBottomLeg = leftUpLeg.transform.Find("leftBottomLeg").gameObject;
         boneControl = leftBottomLeg.AddComponent<BoneControl>();
         boneControl.min = -152f;
@@ -264,6 +265,7 @@ public class BWCharaManage : MonoBehaviour
         boneControl = rightUpLeg.AddComponent<BoneControl>();
         boneControl.min = 150f;
         boneControl.max = 300f;
+        boneControl.parentObject = bottomBody;
         rightBottomLeg = rightUpLeg.transform.Find("rightBottomLeg").gameObject;
         boneControl = rightBottomLeg.AddComponent<BoneControl>();
         boneControl.min = -152f;
