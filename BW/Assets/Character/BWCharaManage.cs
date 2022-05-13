@@ -64,6 +64,9 @@ public class BWCharaManage : MonoBehaviour
     public float frontHemShrink;
     private float FRONT_HEM_RANGE = -13.14225f;
 
+    [SerializeField, Range(-1f, 1f)]
+    public float headDirection;
+
 
     // Start is called before the first frame update
     void Start()
@@ -150,21 +153,9 @@ public class BWCharaManage : MonoBehaviour
         boneControl.min = -40f;
         boneControl.max = 30f;
         frontUpHood = head.transform.Find("frontUpHood").gameObject;
-        boneControl = frontUpHood.AddComponent<BoneControl>();
-        boneControl.min = 132f;
-        boneControl.max = 231f;
         frontBottomHood = head.transform.Find("frontBottomHood").gameObject;
-        boneControl = frontBottomHood.AddComponent<BoneControl>();
-        boneControl.min = -50f;
-        boneControl.max = 80f;
         backUpHood = head.transform.Find("backUpHood").gameObject;
-        boneControl = backUpHood.AddComponent<BoneControl>();
-        boneControl.min = 124f;
-        boneControl.max = 226f;
         backBottomHood = head.transform.Find("backBottomHood").gameObject;
-        boneControl = backBottomHood.AddComponent<BoneControl>();
-        boneControl.min = -58f;
-        boneControl.max = 80f;
         leftUpArm = upBody.transform.Find("leftUpArm").gameObject;
         boneControl = leftUpArm.AddComponent<BoneControl>();
         boneControl.min = -207f;
@@ -395,6 +386,27 @@ public class BWCharaManage : MonoBehaviour
         {
             frontHem[i].transform.localEulerAngles = new Vector3(0, 0, FRONT_HEM_RANGE * frontHemShrink);
         }
+        //frontup 132 157 213
 
+        //frontbottom -61 44 80
+
+        //backup 124 164 226
+
+        //backbottom -58 28 80
+
+        if (headDirection < 0)
+        {
+            frontUpHood.transform.localEulerAngles = new Vector3(0, 0, 157 + headDirection * 25);
+            frontBottomHood.transform.localEulerAngles = new Vector3(0, 0, 44 + -headDirection * 36);
+            backUpHood.transform.localEulerAngles = new Vector3(0, 0, 164 + -headDirection * 40);
+            backBottomHood.transform.localEulerAngles = new Vector3(0, 0, 28 + headDirection * 84);
+        }
+        else
+        {
+            frontUpHood.transform.localEulerAngles = new Vector3(0, 0, 157 + headDirection * 56);
+            frontBottomHood.transform.localEulerAngles = new Vector3(0, 0, 44 + -headDirection * 101);
+            //backUpHood.transform.localEulerAngles = new Vector3(0, 0, 164 + -headDirection * 60);
+            //backBottomHood.transform.localEulerAngles = new Vector3(0, 0, 28 + headDirection * 52);
+        }
     }
 }
