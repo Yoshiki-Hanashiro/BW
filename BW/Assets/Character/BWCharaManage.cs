@@ -381,19 +381,13 @@ public class BWCharaManage : MonoBehaviour
 
     void Update()
     {
+        //裾の制御
         frontHem[0].transform.localEulerAngles = new Vector3(0, 0, -70 + FRONT_HEM_RANGE * frontHemShrink);
         for (int i = 1; i < frontHem.Length; i++)
         {
             frontHem[i].transform.localEulerAngles = new Vector3(0, 0, FRONT_HEM_RANGE * frontHemShrink);
         }
-        //frontup 132 157 213
-
-        //frontbottom -61 44 80
-
-        //backup 124 164 226
-
-        //backbottom -58 28 80
-
+        //フードの制御
         if (headDirection < 0)
         {
             frontUpHood.transform.localEulerAngles = new Vector3(0, 0, 157 + headDirection * 25);
@@ -405,8 +399,14 @@ public class BWCharaManage : MonoBehaviour
         {
             frontUpHood.transform.localEulerAngles = new Vector3(0, 0, 157 + headDirection * 56);
             frontBottomHood.transform.localEulerAngles = new Vector3(0, 0, 44 + -headDirection * 101);
-            //backUpHood.transform.localEulerAngles = new Vector3(0, 0, 164 + -headDirection * 60);
-            //backBottomHood.transform.localEulerAngles = new Vector3(0, 0, 28 + headDirection * 52);
         }
+        //振袖の制御
+
+        //腕　-207→18
+        //袖　-20→-180
+        float leftArmAngleRate = (UnityEditor.TransformUtils.GetInspectorRotation(leftUpArm.transform).z + 207) / 225f;
+        leftArmClothSP.transform.localEulerAngles = new Vector3(0,0, -20 - (160 * leftArmAngleRate));
+        float rightArmAngleRate = (UnityEditor.TransformUtils.GetInspectorRotation(rightUpArm.transform).z + 207) / 225f;
+        rightArmClothSP.transform.localEulerAngles = new Vector3(0, 0, -20 - (160 * rightArmAngleRate));
     }
 }
