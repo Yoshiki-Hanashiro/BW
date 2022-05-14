@@ -344,7 +344,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -6523003411687160473, guid: b3693a97b6b037f4194e06657af9f6fb, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7715546
+      value: 0.9998427
       objectReference: {fileID: 0}
     - target: {fileID: -6523003411687160473, guid: b3693a97b6b037f4194e06657af9f6fb, type: 3}
       propertyPath: m_LocalRotation.x
@@ -352,11 +352,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -6523003411687160473, guid: b3693a97b6b037f4194e06657af9f6fb, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.6361632
+      value: 0.017736627
       objectReference: {fileID: 0}
     - target: {fileID: -6523003411687160473, guid: b3693a97b6b037f4194e06657af9f6fb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -79.013
+      value: 2.033
       objectReference: {fileID: 0}
     - target: {fileID: -6503477239314927365, guid: b3693a97b6b037f4194e06657af9f6fb, type: 3}
       propertyPath: m_LocalRotation.w
@@ -564,7 +564,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -2851108306776224828, guid: b3693a97b6b037f4194e06657af9f6fb, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.6970448
+      value: 0.9440419
       objectReference: {fileID: 0}
     - target: {fileID: -2851108306776224828, guid: b3693a97b6b037f4194e06657af9f6fb, type: 3}
       propertyPath: m_LocalRotation.x
@@ -576,11 +576,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -2851108306776224828, guid: b3693a97b6b037f4194e06657af9f6fb, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.7170276
+      value: -0.32982564
       objectReference: {fileID: 0}
     - target: {fileID: -2851108306776224828, guid: b3693a97b6b037f4194e06657af9f6fb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -91.619
+      value: -38.516
       objectReference: {fileID: 0}
     - target: {fileID: -2154802931949696764, guid: b3693a97b6b037f4194e06657af9f6fb, type: 3}
       propertyPath: m_IsActive
@@ -1044,6 +1044,12 @@ MonoBehaviour:
   backHem: []
   frontHemShrink: 1
   headDirection: 0
+  hemCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1157380703
 GameObject:
   m_ObjectHideFlags: 0

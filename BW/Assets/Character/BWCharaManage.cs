@@ -60,13 +60,15 @@ public class BWCharaManage : MonoBehaviour
     private Vector2 frontHemAnchor = new Vector2(4.78f, 0f);
     private Vector2 backHemAnchor = new Vector2(2f, 0f);
 
-    [SerializeField, Range(0.096f,1f)]
+    [SerializeField, Range(0f,1f)]
     public float frontHemShrink;
     private float FRONT_HEM_RANGE = -13.14225f;
 
     [SerializeField, Range(-1f, 1f)]
     public float headDirection;
 
+    [SerializeField]
+    AnimationCurve hemCurve;
 
     // Start is called before the first frame update
     void Start()
@@ -238,7 +240,7 @@ public class BWCharaManage : MonoBehaviour
         leftUpLeg = root.transform.Find("leftUpLeg").gameObject;
         boneControl = leftUpLeg.AddComponent<BoneControl>();
         boneControl.min = 150f;
-        boneControl.max = 300f;
+        boneControl.max = 305.109f;
         boneControl.parentObject = bottomBody;
         leftBottomLeg = leftUpLeg.transform.Find("leftBottomLeg").gameObject;
         boneControl = leftBottomLeg.AddComponent<BoneControl>();
@@ -255,7 +257,7 @@ public class BWCharaManage : MonoBehaviour
         rightUpLeg = root.transform.Find("rightUpLeg").gameObject;
         boneControl = rightUpLeg.AddComponent<BoneControl>();
         boneControl.min = 150f;
-        boneControl.max = 300f;
+        boneControl.max = 305.109f;
         boneControl.parentObject = bottomBody;
         rightBottomLeg = rightUpLeg.transform.Find("rightBottomLeg").gameObject;
         boneControl = rightBottomLeg.AddComponent<BoneControl>();
@@ -377,6 +379,23 @@ public class BWCharaManage : MonoBehaviour
         frohtHemfixed.autoConfigureConnectedAnchor = false;
         frontHem[frontHem.Length - 1].GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
 
+        hemCurve = new AnimationCurve(
+        new Keyframe(235f, 1f),
+        new Keyframe(244.309f, 0.905f),
+        new Keyframe(257.941f, 0.743f),
+        new Keyframe(270.822f, 0.573f),
+        new Keyframe(280.978f, 0.428f),
+        new Keyframe(287.673f, 0.324f),
+        new Keyframe(295.121f, 0.204f),
+        new Keyframe(297.98f, 0.154f),
+        new Keyframe(301.179f, 0.104f),
+        new Keyframe(305.109f, 0.021f)
+        );
+        for(int i = 0; i < hemCurve.length; i++)
+        {
+            hemCurve.SmoothTangents(i, 0);
+        }
+
     }
 
     void Update()
@@ -387,6 +406,11 @@ public class BWCharaManage : MonoBehaviour
         {
             frontHem[i].transform.localEulerAngles = new Vector3(0, 0, FRONT_HEM_RANGE * frontHemShrink);
         }
+        float leftLegAngle = UnityEditor.TransformUtils.GetInspectorRotation(leftUpLeg.transform).z;
+        float rightLegAngle = UnityEditor.TransformUtils.GetInspectorRotation(rightUpLeg.transform).z;
+        float legAngle = (leftLegAngle > rightLegAngle) ? leftLegAngle : rightLegAngle;
+        frontHemShrink = hemCurve.Evaluate(legAngle);
+
         //ÉtÅ[ÉhÇÃêßå‰
         if (headDirection < 0)
         {
@@ -400,7 +424,7 @@ public class BWCharaManage : MonoBehaviour
             frontUpHood.transform.localEulerAngles = new Vector3(0, 0, 157 + headDirection * 56);
             frontBottomHood.transform.localEulerAngles = new Vector3(0, 0, 44 + -headDirection * 101);
         }
-        //êUë≥ÇÃêßå‰
+        //êUë≥ÇÃïtÇØç™ÇÃêßå‰
 
         //òrÅ@-207Å®18
         //ë≥Å@-20Å®-180
