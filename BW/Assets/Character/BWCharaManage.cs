@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D.IK;
 //キャラの初期設定と、ボーンルールの設定
 public class BWCharaManage : MonoBehaviour
 {
+    public GameObject target;
     //振袖部分の布表現
-    private float ArmClothDamping = 0.5f;
+    private float ArmClothDamping = 0.00001f;//元々0.5f
     private float ArmClothFrequency = 1.5f;
 
     private Vector2 handAnchor = new Vector2(0.1634932f, -0.5892799f);
@@ -186,6 +188,7 @@ public class BWCharaManage : MonoBehaviour
         boneControl.min = -207f;
         boneControl.max = 18f;
         rightArmClothSP = rightUpArm.transform.Find("rightArmClothSP").gameObject;
+
         //rightArmClothとletArmClothを取得
         tmp = leftArmClothSP.transform.GetChild(0).gameObject;
         count = 0;
@@ -221,6 +224,8 @@ public class BWCharaManage : MonoBehaviour
             }
             count++;
         }
+
+
         rightBottomArm = rightUpArm.transform.Find("rightBottomArm").gameObject;
         boneControl = rightBottomArm.AddComponent<BoneControl>();
         boneControl.min = 0f;
@@ -244,7 +249,7 @@ public class BWCharaManage : MonoBehaviour
         boneControl.parentObject = bottomBody;
         leftBottomLeg = leftUpLeg.transform.Find("leftBottomLeg").gameObject;
         boneControl = leftBottomLeg.AddComponent<BoneControl>();
-        boneControl.min = -152f;
+        boneControl.min = -161f;
         boneControl.max = 0f;
         leftFoot = leftBottomLeg.transform.Find("leftFoot").gameObject;
         boneControl = leftFoot.AddComponent<BoneControl>();
@@ -261,7 +266,7 @@ public class BWCharaManage : MonoBehaviour
         boneControl.parentObject = bottomBody;
         rightBottomLeg = rightUpLeg.transform.Find("rightBottomLeg").gameObject;
         boneControl = rightBottomLeg.AddComponent<BoneControl>();
-        boneControl.min = -152f;
+        boneControl.min = -161f;
         boneControl.max = 0f;
         rightFoot = rightBottomLeg.transform.Find("rightFoot").gameObject;
         boneControl = rightFoot.AddComponent<BoneControl>();
@@ -275,8 +280,16 @@ public class BWCharaManage : MonoBehaviour
         //腕の布のボーン
         for (int armCount = 0; armCount < rightArmCloth.Length; armCount++)
         {
+
+            /*boneControl  = rightArmCloth[armCount].AddComponent<BoneControl>();
+            boneControl.min = 0f;
+            boneControl.max = 90f;
+            boneControl = leftArmCloth[armCount].AddComponent<BoneControl>();
+            boneControl.min = 0f;
+            boneControl.max = 90f;*/
+            
             //先端以外にfixedJointをつけていく
-            if(armCount == rightArmCloth.Length - 1)
+            if (armCount == rightArmCloth.Length - 1)
             {
                 //先端だけRigidbodyをつける
                 rightArmCloth[armCount].AddComponent<Rigidbody2D>();
@@ -305,6 +318,23 @@ public class BWCharaManage : MonoBehaviour
             rightArmCloth[armCount].AddComponent<FixedJoint2D>();
             leftArmCloth[armCount].AddComponent<FixedJoint2D>();
         }
+        //袖が腕を貫通しない用の処理    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /*for(int armCount = 1; armCount < rightArmCloth.Length; armCount++)
+        {
+            CircleCollider2D tmpCircleCollider2D = rightArmCloth[armCount].AddComponent<CircleCollider2D>();
+            Rigidbody2D tmpRigidbody2D = rightArmCloth[armCount].GetComponent<Rigidbody2D>();
+        }
+        BoxCollider2D tmpBoxCollider2D =  rightBottomArm.AddComponent<BoxCollider2D>();
+        tmpBoxCollider2D.offset = new Vector2(1.96f, 0f);
+        tmpBoxCollider2D.size = new Vector2(3.91f, 1f);
+        tmpBoxCollider2D = rightUpArm.AddComponent<BoxCollider2D>();
+        tmpBoxCollider2D.offset = new Vector2(2.18f, 0f);
+        tmpBoxCollider2D.size = new Vector2(4.27f, 1f);*/
+
+
+
+
+
         //腕の布のボーンを吊り下げる
         FixedJoint2D rightArmfixed = rightArmClothSP.AddComponent<FixedJoint2D>();
         rightArmfixed.connectedBody = rightArmCloth[0].GetComponent<Rigidbody2D>();
@@ -396,6 +426,11 @@ public class BWCharaManage : MonoBehaviour
             hemCurve.SmoothTangents(i, 0);
         }
 
+        //IK設定
+        IKManager2D ik = root.AddComponent<IKManager2D>();
+        //CCDSolver2D ccd =
+        ik.AddSolver(solver=);
+
     }
 
     void Update()
@@ -432,5 +467,36 @@ public class BWCharaManage : MonoBehaviour
         leftArmClothSP.transform.localEulerAngles = new Vector3(0,0, -20 - (160 * leftArmAngleRate));
         float rightArmAngleRate = (UnityEditor.TransformUtils.GetInspectorRotation(rightUpArm.transform).z + 207) / 225f;
         rightArmClothSP.transform.localEulerAngles = new Vector3(0, 0, -20 - (160 * rightArmAngleRate));
+
+        //袖が腕を貫通しないようにする
+        //rightArmCloth[6]と、rightBottomArmからrightHand
+        int changeLord = 3;//腕の裾の先端からこの個数だけ前腕に当たるようにする
+        for(int i = 0; i < rightArmCloth.Length; i++)
+        {
+            Vector3 bottomClothLocalPos = rightBottomArm.transform.InverseTransformPoint(rightArmCloth[i].transform.position);
+            Vector3 upClothLocalPos = rightUpArm.transform.InverseTransformPoint(rightArmCloth[i].transform.position);
+            if (bottomClothLocalPos.x > 0 && bottomClothLocalPos.x < rightHand.transform.localPosition.x)//前腕の範囲内か
+            {
+                if (bottomClothLocalPos.y >= -1 && bottomClothLocalPos.y <=1)//腕を越えてるか
+                {
+                    //rightArmCloth[6].transform.Translate(new Vector3(0, -(clothLocalPos.y + 1), 0));
+                    if (i >= rightArmCloth.Length - changeLord)//袖の一部（前腕に近い部分）しか反応しないようにした
+                    {
+                        //rightArmCloth[i].GetComponent<Rigidbody2D>().AddRelativeForce(Vector2.down * (bottomClothLocalPos.y + 1) * 10, ForceMode2D.Impulse);
+                    }
+                }
+            }
+            if (upClothLocalPos.x > 0 && upClothLocalPos.x < rightHand.transform.localPosition.x)//上腕の範囲内か
+            {
+                if (upClothLocalPos.y >= -1 && upClothLocalPos.y <= 1)//腕を越えてるか
+                {
+                    if (i < rightArmCloth.Length - changeLord)//袖の一部（前腕に近い部分）しか反応しないようにした
+                    {
+                        //rightArmCloth[i].GetComponent<Rigidbody2D>().AddRelativeForce(Vector2.down * (upClothLocalPos.y + 1) * 10, ForceMode2D.Impulse);
+                    }
+                }
+            }
+        }
+        
     }
 }
