@@ -72,9 +72,6 @@ public class BWCharaManage : MonoBehaviour
     [SerializeField]
     AnimationCurve hemCurve;
 
-
-    LimbSolver2D limb;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -432,11 +429,23 @@ public class BWCharaManage : MonoBehaviour
         //IK設定
         IKManager2D ik = root.AddComponent<IKManager2D>();
         GameObject rightArmik = new GameObject("rightArmIK");
+        GameObject leftArmik = new GameObject("leftArmIK");
+        GameObject rightLegik = new GameObject("rightArmIK");
+        GameObject leftLegik = new GameObject("leftArmIK");
         rightArmik.transform.parent = root.transform;
-        limb = rightArmik.AddComponent<LimbSolver2D>();
+        leftArmik.transform.parent = root.transform;
+        rightLegik.transform.parent = root.transform;
+        leftLegik.transform.parent = root.transform;
+        LimbSolver2D rightArmLimb = rightArmik.AddComponent<LimbSolver2D>();
+        LimbSolver2D leftArmLimb = rightArmik.AddComponent<LimbSolver2D>();
+        LimbSolver2D rightLegLimb = rightArmik.AddComponent<LimbSolver2D>();
+        LimbSolver2D leftLegLimb = rightArmik.AddComponent<LimbSolver2D>();
         //limb.UpdateIK();
         //EffectorとTargetをここから設定する方法を探す
-        ik.AddSolver(limb);
+        ik.AddSolver(rightArmLimb);
+        ik.AddSolver(leftArmLimb);
+        ik.AddSolver(rightLegLimb);
+        ik.AddSolver(leftLegLimb);
         /*IKChain2DにEffectorの元祖みたいなやつがあった。でも指定しても特に変わらず*/
         //IKChain2D ikch = new IKChain2D();
         //ikch.effector = rightHand.transform;
@@ -480,10 +489,30 @@ public class BWCharaManage : MonoBehaviour
          * IKChain2D m_Chain  = limb.GetChain(0); 
          * m_Chain.effector = target.transform;　　　　　　　　　　成功。rightArmIKのLimbSolver2DのEffectorにtarget(Transform）が収まった
          */
-        IKChain2D m_Chain  = limb.GetChain(0);
-        m_Chain.effector = rightHand.transform;
-        m_Chain.target = target.transform;
-        
+        IKChain2D rightArmM_Chain  = rightArmLimb.GetChain(0);//rightArmIKに紐づいたLimbSolverのGetChain関数（indexは適当に0）を使って、IKChain2Dのm_Chainを引っ張ってくる
+        rightArmM_Chain.effector = rightHand.transform;//effectorを設定。個々では右手
+        rightArmM_Chain.target = rightArmik.transform;//targetを設定。個々では暫定的にtarget
+        rightArmLimb.flip = true;//腕の曲がり方を正常にする。
+        rightArmLimb.constrainRotation = false;//手首が曲がるようにする
+
+        IKChain2D leftArmM_Chain = leftArmLimb.GetChain(0);
+        leftArmM_Chain.effector = leftHand.transform;
+        leftArmM_Chain.target = leftArmik.transform;
+        leftArmLimb.flip = true;
+        leftArmLimb.constrainRotation = false;
+
+        IKChain2D rightLegM_Chain = rightLegLimb.GetChain(0);
+        rightLegM_Chain.effector = rightFoot.transform;
+        rightLegM_Chain.target = rightLegik.transform;
+        rightLegLimb.constrainRotation = false;
+
+        IKChain2D leftLegM_Chain = leftLegLimb.GetChain(0);
+        leftLegM_Chain.effector = leftFoot.transform;
+        leftLegM_Chain.target = leftLegik.transform;
+        leftLegLimb.constrainRotation = false;
+
+
+
     }
 
     void Update()
