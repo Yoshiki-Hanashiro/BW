@@ -161,16 +161,16 @@ public class BWCharaManage : MonoBehaviour
         backUpHood = head.transform.Find("backUpHood").gameObject;
         backBottomHood = head.transform.Find("backBottomHood").gameObject;
         leftUpArm = upBody.transform.Find("leftUpArm").gameObject;
-        boneControl = leftUpArm.AddComponent<BoneControl>();
+        /*boneControl = leftUpArm.AddComponent<BoneControl>();
         boneControl.min = -207f;
-        boneControl.max = 18f;
+        boneControl.max = 18f;*/
         leftArmClothSP = leftUpArm.transform.Find("leftArmClothSP").gameObject;
 
 
         leftBottomArm = leftUpArm.transform.Find("leftBottomArm").gameObject;
-        boneControl = leftBottomArm.AddComponent<BoneControl>();
+        /*boneControl = leftBottomArm.AddComponent<BoneControl>();
         boneControl.min = 0f;
-        boneControl.max = 145f;
+        boneControl.max = 145f;*/
         leftHand = leftBottomArm.transform.Find("leftHand").gameObject;
         boneControl = leftHand.AddComponent<BoneControl>();
         boneControl.min = -32f;
@@ -184,9 +184,9 @@ public class BWCharaManage : MonoBehaviour
         boneControl.min = -55f;
         boneControl.max = 0f;
         rightUpArm = upBody.transform.Find("rightUpArm").gameObject;
-        boneControl = rightUpArm.AddComponent<BoneControl>();
+        /*boneControl = rightUpArm.AddComponent<BoneControl>();
         boneControl.min = -207f;
-        boneControl.max = 18f;
+        boneControl.max = 18f;*/
         rightArmClothSP = rightUpArm.transform.Find("rightArmClothSP").gameObject;
 
         //rightArmCloth‚ÆletArmCloth‚ðŽæ“¾
@@ -227,9 +227,9 @@ public class BWCharaManage : MonoBehaviour
 
 
         rightBottomArm = rightUpArm.transform.Find("rightBottomArm").gameObject;
-        boneControl = rightBottomArm.AddComponent<BoneControl>();
+        /*boneControl = rightBottomArm.AddComponent<BoneControl>();
         boneControl.min = 0f;
-        boneControl.max = 145f;
+        boneControl.max = 145f;*/
         rightHand = rightBottomArm.transform.Find("rightHand").gameObject;
         boneControl = rightHand.AddComponent<BoneControl>();
         boneControl.min = -32f;
