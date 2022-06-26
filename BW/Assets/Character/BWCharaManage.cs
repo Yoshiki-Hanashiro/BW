@@ -430,8 +430,8 @@ public class BWCharaManage : MonoBehaviour
         IKManager2D ik = root.AddComponent<IKManager2D>();
         GameObject rightArmik = new GameObject("rightArmIK");
         GameObject leftArmik = new GameObject("leftArmIK");
-        GameObject rightLegik = new GameObject("rightArmIK");
-        GameObject leftLegik = new GameObject("leftArmIK");
+        GameObject rightLegik = new GameObject("rightLegIK");
+        GameObject leftLegik = new GameObject("leftLegIK");
         rightArmik.transform.parent = root.transform;
         leftArmik.transform.parent = root.transform;
         rightLegik.transform.parent = root.transform;
