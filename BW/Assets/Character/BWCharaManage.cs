@@ -72,6 +72,9 @@ public class BWCharaManage : MonoBehaviour
     [SerializeField]
     AnimationCurve hemCurve;
 
+
+    LimbSolver2D limb;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -428,9 +431,59 @@ public class BWCharaManage : MonoBehaviour
 
         //IK設定
         IKManager2D ik = root.AddComponent<IKManager2D>();
-        //CCDSolver2D ccd =
-        ik.AddSolver(solver=);
-
+        GameObject rightArmik = new GameObject("rightArmIK");
+        rightArmik.transform.parent = root.transform;
+        limb = rightArmik.AddComponent<LimbSolver2D>();
+        //limb.UpdateIK();
+        //EffectorとTargetをここから設定する方法を探す
+        ik.AddSolver(limb);
+        /*IKChain2DにEffectorの元祖みたいなやつがあった。でも指定しても特に変わらず*/
+        //IKChain2D ikch = new IKChain2D();
+        //ikch.effector = rightHand.transform;
+        /*LimbSolver2DEditor.csにインスペクタ上のEffectorという名前を指定しているのを見つけた。*/
+        /*
+         *おそらくこれはインスペクタ上に表示して特定の名前を付けるためのやつで、本質ではない。
+         *ならその本質の変数はどこ？可能性があるのはLImbSolver2Dもしくはその継承元のSolver2D
+         *どうやって探そうか？
+         * EditorGUILayout.PropertyField(m_ChainProperty.FindPropertyRelative("m_EffectorTransform"), Contents.effectorLabel);
+         * m_ChainProperty = serializedObject.FindProperty("m_Chain");なので、どこかにm_Chainというプロパティが存在するはず。
+         * それに関連したやつにm_EffectorTransform？これがEffectorとかTargetの本質な気がする。
+         * じゃあm_Chainを探そう。
+         * LimbSolver2D.csに発見。
+         * private IKChain2D m_Chain = new IKChain2D();　IKChain2Dらしい。m_Chain.effectorともあったことからこの中にありそう
+         * IKChain2Dを探そう。Packages/com.unity.2d.animation/IK/Runtime/IKChain2D.csにあった。
+         * IKChain2D.csの中でeffectorを探そう。
+         * m_Targetとm_Effectorと名前のつけられたTransform m_TargetTransformとm_EffecterTransformを発見
+         * privateだがset,getのやつがあるので使えそう
+         * public Transform targetを継承すれば可能？
+         * IKChain2D m_Chain = new IKChain2D();
+            m_Chain.effector = rightHand.transform;
+            m_Chain.target = target.transform;
+         * ↑をやっても変化なし。エラーもなし。IKオブジェクトに関連づいてないからかも。
+         * このプログラムで定義してるLimbSolver2DとかIKManagerの変数越しに設定できるか？もしくはここから独自に何らかの継承をするか
+         * まずはlimbからどうにかアクセスできるかを試す。
+         * 
+         * limbの中身は右手にAddComponentされたLimbSolver2D。
+         * LimbSolver2DにはIKChain2D.csを格納しているm_chainがある。
+         * IKChain2Dにはeffectorの本質であるm_EffectorTransformがある
+         * IKChain2Dにはセッターとして　effector関数がある
+         * LimbSolver2D内のm_chainにアクセスして、そこからm_chain.effectorみたいに行けるか
+         * 
+         * LimbSolver2Dにm_chainの定義が含まれておらず・・・
+         * おそらくm_Chainがprivateで定義されてるから。セッター勝手に作ったら怒られるかな。SerializeFieldって、関数外からはアクセスできないけどインスペクタには出すみたいなやつだっけ。
+         * ゲッターの方勝手に作ったら何らかの力によって消滅した。
+         * LImbSolver2Dにpublic override IKChain2D GetChain(int index)ってのがあった。これreturn m_chainだけだから取得できるかも。ただindexが何かわからない。
+         * limb.GetChain() →　LimbSolver2D.Getchain(int)の必要な仮パラメータ'indexに対応する特定の引数がありません。公式ドキュメントのDescriptionは空白。
+         * でもGetChain内でindexを使って何も処理をしていない。
+         * IKChain2DをオーバーライドしてるならIKChain2D.csのGetChainを見に行けばいい？
+         * IKChain2DにGetChainなんて文字列はなかった。適当に一旦0とかでやってみようかな
+         * IKChain2D m_Chain  = limb.GetChain(0); 
+         * m_Chain.effector = target.transform;　　　　　　　　　　成功。rightArmIKのLimbSolver2DのEffectorにtarget(Transform）が収まった
+         */
+        IKChain2D m_Chain  = limb.GetChain(0);
+        m_Chain.effector = rightHand.transform;
+        m_Chain.target = target.transform;
+        
     }
 
     void Update()
@@ -497,6 +550,5 @@ public class BWCharaManage : MonoBehaviour
                 }
             }
         }
-        
     }
 }
