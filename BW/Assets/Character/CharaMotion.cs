@@ -10,13 +10,25 @@ public class CharaMotion : MonoBehaviour
         
     }
 
+    private void Update()
+    {
+        /*if (Input.GetKey(KeyCode.A))
+        {
+            transform.Translate(-0.1f,0,0);
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.Translate(0.1f, 0, 0);
+        }*/
+    }
+
     void Walk(float speed)
     {
 
     }
 
     // Update is called once per frame
-    void Update()
+    void MotionUpdate()
     {
         
     }

@@ -11,7 +11,6 @@ public class BWCharaManage : MonoBehaviour
     private float ArmClothFrequency = 1.5f;
 
     private Vector2 handAnchor = new Vector2(0.1634932f, -0.5892799f);
-
     //ボーン
     public GameObject root;
     public GameObject head;
@@ -342,7 +341,7 @@ public class BWCharaManage : MonoBehaviour
         rightArmfixed.frequency = ArmClothFrequency;
         rightArmfixed.anchor = new Vector2(Vector2.Distance(rightArmCloth[0].transform.position, rightArmClothSP.transform.position), 0);
         rightArmfixed.autoConfigureConnectedAnchor = false;
-        rightArmClothSP.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+        rightArmClothSP.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
 
         FixedJoint2D rightHandfixed = rightHand.AddComponent<FixedJoint2D>();
         rightHandfixed.connectedBody = rightArmCloth[rightArmCloth.Length-1].GetComponent<Rigidbody2D>();
@@ -350,7 +349,7 @@ public class BWCharaManage : MonoBehaviour
         rightHandfixed.frequency = 0.0001f;
         rightHandfixed.anchor = handAnchor;
         rightHandfixed.autoConfigureConnectedAnchor = false;
-        rightHand.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+        rightHand.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
 
         FixedJoint2D leftArmfixed = leftArmClothSP.AddComponent<FixedJoint2D>();
         leftArmfixed.connectedBody = leftArmCloth[0].GetComponent<Rigidbody2D>();
@@ -358,7 +357,7 @@ public class BWCharaManage : MonoBehaviour
         leftArmfixed.frequency = ArmClothFrequency;
         leftArmfixed.anchor = new Vector2(Vector2.Distance(leftArmCloth[0].transform.position, leftArmClothSP.transform.position), 0);
         leftArmfixed.autoConfigureConnectedAnchor = false;
-        leftArmClothSP.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+        leftArmClothSP.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
 
         FixedJoint2D leftHandfixed = leftHand.AddComponent<FixedJoint2D>();
         leftHandfixed.connectedBody = leftArmCloth[rightArmCloth.Length - 1].GetComponent<Rigidbody2D>();
@@ -366,11 +365,11 @@ public class BWCharaManage : MonoBehaviour
         leftHandfixed.frequency = 0.0001f;
         leftHandfixed.anchor = handAnchor;
         leftHandfixed.autoConfigureConnectedAnchor = false;
-        leftHand.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+        leftHand.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
 
 
         //裾のボーン
-        for(int backHemCount = 0; backHemCount < backHem.Length; backHemCount++)
+        for (int backHemCount = 0; backHemCount < backHem.Length; backHemCount++)
         {
             //先端以外にfixedJointをつけていく
             if (backHemCount == backHem.Length - 1)
@@ -399,15 +398,15 @@ public class BWCharaManage : MonoBehaviour
         bottomBodyfixed.frequency = backHemFrequency;
         bottomBodyfixed.anchor = backHemAnchor;
         bottomBodyfixed.autoConfigureConnectedAnchor = false;
-        bottomBody.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
-        
+        bottomBody.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+
         FixedJoint2D frohtHemfixed = frontHem[frontHem.Length-1].AddComponent<FixedJoint2D>();
         frohtHemfixed.connectedBody = backHem[backHem.Length - 1].GetComponent<Rigidbody2D>();
         frohtHemfixed.dampingRatio = HemDamping;
         frohtHemfixed.frequency = HemFrequency;
         frohtHemfixed.anchor = frontHemAnchor;
         frohtHemfixed.autoConfigureConnectedAnchor = false;
-        frontHem[frontHem.Length - 1].GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+        frontHem[frontHem.Length - 1].GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
 
         hemCurve = new AnimationCurve(
         new Keyframe(235f, 1f),
@@ -511,7 +510,9 @@ public class BWCharaManage : MonoBehaviour
         leftLegM_Chain.target = leftLegik.transform;
         leftLegLimb.constrainRotation = false;
 
-
+        /*GameObject brain = Instantiate(brainPref);
+        brain.transform.parent = transform;
+        brain.transform.localPosition = new Vector3(0, 0, 0);*/
 
     }
 
