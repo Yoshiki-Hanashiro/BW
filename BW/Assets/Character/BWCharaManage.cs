@@ -71,6 +71,12 @@ public class BWCharaManage : MonoBehaviour
     [SerializeField]
     AnimationCurve hemCurve;
 
+    //IKÇ‹ÇÌÇË
+    GameObject rightArmik;
+    GameObject leftArmik;
+    GameObject rightLegik;
+    GameObject leftLegik;
+    CharaMotion charamotion;
     // Start is called before the first frame update
     void Start()
     {
@@ -427,10 +433,10 @@ public class BWCharaManage : MonoBehaviour
 
         //IKê›íË
         IKManager2D ik = root.AddComponent<IKManager2D>();
-        GameObject rightArmik = new GameObject("rightArmIK");
-        GameObject leftArmik = new GameObject("leftArmIK");
-        GameObject rightLegik = new GameObject("rightLegIK");
-        GameObject leftLegik = new GameObject("leftLegIK");
+        rightArmik = new GameObject("rightArmIK");
+        leftArmik = new GameObject("leftArmIK");
+        rightLegik = new GameObject("rightLegIK");
+        leftLegik = new GameObject("leftLegIK");
         rightArmik.transform.parent = root.transform;
         leftArmik.transform.parent = root.transform;
         rightLegik.transform.parent = root.transform;
@@ -509,6 +515,8 @@ public class BWCharaManage : MonoBehaviour
         leftLegM_Chain.effector = leftFoot.transform;
         leftLegM_Chain.target = leftLegik.transform;
         leftLegLimb.constrainRotation = false;
+        charamotion = this.gameObject.GetComponent<CharaMotion>();
+        charamotion.setIK(rightArmik, leftArmik, rightLegik, leftLegik);
 
         /*GameObject brain = Instantiate(brainPref);
         brain.transform.parent = transform;
