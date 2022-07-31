@@ -46,18 +46,22 @@ public class CharaMotion : MonoBehaviour
         Vector3 origin = body.transform.position; // Œ´“_
         Vector3 direction = body.transform.TransformDirection(new Vector3(-1, 0, 0));
         footRay = new Ray2D(origin, direction);
-        RaycastHit2D hit = Physics2D.Raycast(origin, direction);
+        RaycastHit2D hit = Physics2D.Raycast(origin, direction,1.7f);
         if (hit.collider != null && hit.collider.tag=="Ground")
         {
             if (setedIK)
             {
-                rightLegik.transform.position = hit.point;
-                leftLegik.transform.position = hit.point;
-                Debug.Log("’n‚É‘«‚ð‚Â‚¯‚é");
+                rightLegik.transform.position = hit.point-new Vector2(direction.x,direction.y)*0.15f;
+                leftLegik.transform.position = hit.point - new Vector2(direction.x, direction.y) * 0.15f;
+                float distance = Vector3.Distance(hit.point, origin);
+                if (distance < 1.5f)
+                {
+                    bodyRigid.AddRelativeForce(new Vector2(1.5f-distance, 0)*50);
+                }
             }
 
         }
-        Debug.DrawRay(footRay.origin, footRay.direction*10,Color.red);
+        Debug.DrawRay(footRay.origin, footRay.direction*1.7f,Color.red);
     }
 
     void Walk(float speed)
