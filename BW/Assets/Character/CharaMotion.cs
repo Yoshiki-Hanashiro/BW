@@ -40,9 +40,12 @@ public class CharaMotion : MonoBehaviour
         //姿勢維持
         if (Input.GetKey(KeyCode.A))
         {
-            bodyRigid.AddRelativeForce(new Vector2(2,0));
+            bodyRigid.AddRelativeForce(new Vector2(0.5f,0.5f));
         }
-
+        if (Input.GetKey(KeyCode.Q))
+        {
+            bodyRigid.AddTorque(0.1f);
+        }
         Vector3 origin = body.transform.position; // 原点
         Vector3 direction = body.transform.TransformDirection(new Vector3(-1, 0, 0));
         footRay = new Ray2D(origin, direction);
@@ -56,7 +59,9 @@ public class CharaMotion : MonoBehaviour
                 float distance = Vector3.Distance(hit.point, origin);
                 if (distance < 1.5f)
                 {
-                    bodyRigid.AddRelativeForce(new Vector2(1.5f-distance, 0)*50);
+                    //bodyRigid.AddRelativeForce(new Vector2(1.5f-distance, 0)*50);  //地面との距離に比例して力を加える
+                    //地面に近づくスピードに比例するとかがんだ状態で止まりそう
+                    bodyRigid.AddRelativeForce(new Vector2(-bodyRigid.velocity.y*3,0));
                 }
             }
 
