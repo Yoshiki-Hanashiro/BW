@@ -40,25 +40,31 @@ public class CharaMotion : MonoBehaviour
         //姿勢維持
         if (Input.GetKey(KeyCode.A))
         {
-            bodyRigid.AddRelativeForce(new Vector2(0.5f,0.5f));
+            bodyRigid.AddRelativeForce(new Vector2(0.5f, 0f));
         }
         if (Input.GetKey(KeyCode.Q))
         {
             bodyRigid.AddTorque(0.1f);
         }
-        float legLength = 1.7f;
+    }
+
+    private void FixedUpdate()
+    {
+
+        float legLength = 1.59f;
+        float legForce = 100f;
         Vector3 origin = body.transform.position; // 原点
         Vector3 direction = body.transform.TransformDirection(new Vector3(-1, 0, 0));
         footRay = new Ray2D(origin, direction);
-        RaycastHit2D hit = Physics2D.Raycast(origin, direction, legLength);
-        if (hit.collider != null && hit.collider.tag=="Ground")
+        RaycastHit2D hit = Physics2D.Raycast(origin, direction, legLength+1);
+        if (hit.collider != null && hit.collider.tag == "Ground")
         {
             if (setedIK)
             {
-                rightLegik.transform.position = hit.point-new Vector2(direction.x,direction.y)*0.15f;
+                rightLegik.transform.position = hit.point - new Vector2(direction.x, direction.y) * 0.15f;
                 leftLegik.transform.position = hit.point - new Vector2(direction.x, direction.y) * 0.15f;
                 float distance = Vector3.Distance(hit.point, origin);
-                if (distance < legLength)
+                if (distance < legLength+1)
                 {
                     //足が地面につく
                     //bodyRigid.AddRelativeForce(new Vector2(1.5f-distance, 0)*50);  //地面との距離に比例して力を加える
@@ -79,23 +85,32 @@ public class CharaMotion : MonoBehaviour
                         }
                         
                     }*/
-                    //bodyRigid.AddRelativeForce(new Vector2(-bodyRigid.velocity.y*3, 0));
+                    //bodyRigid.AddRelativeForce(new Vector2(2000*Time.deltaTime*bodyRigid.gravityScale, 0));
                     //制動距離をもとにした計算式
-                    float v0 = 2 * (-9.81f * bodyRigid.gravityScale) * (legLength - distance);
-                    float a = (-bodyRigid.velocity.y - v0) / (Time.deltaTime*40);
-                    bodyRigid.AddRelativeForce(new Vector2(a, 0));
+                    float gravity = Physics.gravity.y * bodyRigid.gravityScale;
+                    float v0 = 2 * gravity * (legLength - distance);//目標速度
+                    if (v0 > 0)
+                    {
+                        v0 = 0;
+                    }
+                    v0 = Mathf.Sqrt(-v0);
+                    float a = ((v0 - bodyRigid.velocity.y) / (1/legForce))*Time.deltaTime;
+                    a = a - gravity*0.9f;
+                    bodyRigid.AddRelativeForce(new Vector2(a, 0)); //正
                     //投げ上げ式
                     /*
                         y=v0^2/2g 投げ上げの最高点
                         v0=sqrt(2gy) 指定の位置を最高点にするときに必要な速度
-                        v=v0+at 等加速度直線運動の公式
-                        a=(v-v0)/t
+                        (目標速度)=(初速)+at 等加速度直線運動の公式　目標速度にするにはどれくらいの加速度をかければ良いのか
+                        a=(目標速度-初速)/t　現在の速度から目標速度に到達するために必要な加速度
+
+                        distanceのところで重力加速度分の加速度を確保したい
                     */
                 }
             }
 
         }
-        Debug.DrawRay(footRay.origin, footRay.direction*1.7f,Color.red);
+        Debug.DrawRay(footRay.origin, footRay.direction * (legLength+1), Color.red);
     }
 
     void Walk(float speed)
