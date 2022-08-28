@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CharaMotion : MonoBehaviour
 {
+    public GameObject target;
     [SerializeField]
     private Transform body;
     private Rigidbody2D bodyRigid;
@@ -40,53 +41,38 @@ public class CharaMotion : MonoBehaviour
         //姿勢維持
         if (Input.GetKey(KeyCode.A))
         {
-            bodyRigid.AddRelativeForce(new Vector2(0.5f, 0f));
+            bodyRigid.AddRelativeForce(new Vector2(0f, 100f*Time.deltaTime));
         }
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKey(KeyCode.D))
         {
-            bodyRigid.AddTorque(0.1f);
+            bodyRigid.AddRelativeForce(new Vector2(0f, -100f*Time.deltaTime));
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            bodyRigid.AddRelativeForce(new Vector2(7, 0), ForceMode2D.Impulse);
         }
     }
 
     private void FixedUpdate()
     {
 
-        float legLength = 1.59f;
-        float legForce = 100f;
+        float legLength = 1.57f;
+        float legForce = 200f;
         Vector3 origin = body.transform.position; // 原点
         Vector3 direction = body.transform.TransformDirection(new Vector3(-1, 0, 0));
         footRay = new Ray2D(origin, direction);
-        RaycastHit2D hit = Physics2D.Raycast(origin, direction, legLength+1);
+        RaycastHit2D hit = Physics2D.Raycast(origin, direction, legLength+0.1f);
         if (hit.collider != null && hit.collider.tag == "Ground")
         {
-            if (setedIK)
+            if (setedIK)//IKは最初はないのでそれの設定が完了したら。
             {
+                target.transform.position = hit.point + hit.normal;
+
                 rightLegik.transform.position = hit.point - new Vector2(direction.x, direction.y) * 0.15f;
                 leftLegik.transform.position = hit.point - new Vector2(direction.x, direction.y) * 0.15f;
                 float distance = Vector3.Distance(hit.point, origin);
-                if (distance < legLength+1)
+                if (distance < legLength+0.1f)
                 {
-                    //足が地面につく
-                    //bodyRigid.AddRelativeForce(new Vector2(1.5f-distance, 0)*50);  //地面との距離に比例して力を加える
-                    //下に下がっているときにより強い上昇を掛ける
-                    //地面に近づくスピードに比例するとかがんだ状態で止まりそう
-                    /*if (bodyRigid.velocity.y < -0.3f)
-                    {
-                        bodyRigid.AddRelativeForce(new Vector2(16, 0));
-                    }
-                    else {
-                        if (distance > legLength - 0.1f)
-                        {
-                            bodyRigid.AddTorque(100f);
-                        }
-                        else
-                        {
-                            bodyRigid.AddRelativeForce(new Vector2(3, 0));
-                        }
-                        
-                    }*/
-                    //bodyRigid.AddRelativeForce(new Vector2(2000*Time.deltaTime*bodyRigid.gravityScale, 0));
-                    //制動距離をもとにした計算式
                     float gravity = Physics.gravity.y * bodyRigid.gravityScale;
                     float v0 = 2 * gravity * (legLength - distance);//目標速度
                     if (v0 > 0)
