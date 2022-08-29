@@ -6,7 +6,7 @@ public class CharaMotion : MonoBehaviour
 {
     public GameObject target;
     [SerializeField]
-    private Transform body;
+    private GameObject body;
     private Rigidbody2D bodyRigid;
     [SerializeField]
     private GameObject rightBottomLeg;
@@ -18,6 +18,8 @@ public class CharaMotion : MonoBehaviour
     GameObject leftArmik;
     GameObject rightLegik;
     GameObject leftLegik;
+
+    int scaleFlag = 0;
     public void setIK(GameObject  rightarm,GameObject leftarm,GameObject rightleg,GameObject leftleg)
     {
         setedIK = true;
@@ -38,18 +40,28 @@ public class CharaMotion : MonoBehaviour
 
     private void Update()
     {
+        if (this.gameObject.transform.localScale.x > 0)
+        {
+            scaleFlag = 1;
+        }
+        else
+        {
+            scaleFlag = -1;
+        }
         //épê®à€éù
         if (Input.GetKey(KeyCode.A))
         {
-            bodyRigid.AddRelativeForce(new Vector2(0f, 100f*Time.deltaTime));
+            bodyRigid.AddRelativeForce(new Vector2(-100f * Time.deltaTime, 0f));
+            this.gameObject.transform.localScale = new Vector3(-0.1f, 0.1f, 0.1f);
         }
         if (Input.GetKey(KeyCode.D))
         {
-            bodyRigid.AddRelativeForce(new Vector2(0f, -100f*Time.deltaTime));
+            bodyRigid.AddRelativeForce(new Vector2(100f * Time.deltaTime, 0f));
+            this.gameObject.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            bodyRigid.AddRelativeForce(new Vector2(7, 0), ForceMode2D.Impulse);
+            bodyRigid.AddRelativeForce(new Vector2(0, 7), ForceMode2D.Impulse);
         }
     }
 
@@ -59,7 +71,7 @@ public class CharaMotion : MonoBehaviour
         float legLength = 1.57f;
         float legForce = 200f;
         Vector3 origin = body.transform.position; // å¥ì_
-        Vector3 direction = body.transform.TransformDirection(new Vector3(-1, 0, 0));
+        Vector3 direction = body.transform.TransformDirection(new Vector3(0, -1, 0));
         footRay = new Ray2D(origin, direction);
         RaycastHit2D hit = Physics2D.Raycast(origin, direction, legLength+0.1f);
         if (hit.collider != null && hit.collider.tag == "Ground")
@@ -82,7 +94,7 @@ public class CharaMotion : MonoBehaviour
                     v0 = Mathf.Sqrt(-v0);
                     float a = ((v0 - bodyRigid.velocity.y) / (1/legForce))*Time.deltaTime;
                     a = a - gravity*0.9f;
-                    bodyRigid.AddRelativeForce(new Vector2(a, 0)); //ê≥
+                    bodyRigid.AddRelativeForce(new Vector2(0, a)); //ê≥
                     //ìäÇ∞è„Ç∞éÆ
                     /*
                         y=v0^2/2g ìäÇ∞è„Ç∞ÇÃç≈çÇì_
@@ -96,7 +108,7 @@ public class CharaMotion : MonoBehaviour
             }
 
         }
-        Debug.DrawRay(footRay.origin, footRay.direction * (legLength+1), Color.red);
+        Debug.DrawRay(footRay.origin, footRay.direction * (legLength+0.1f), Color.red);
     }
 
     void Walk(float speed)

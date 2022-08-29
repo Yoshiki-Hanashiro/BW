@@ -16,7 +16,7 @@ public class BoneControl : MonoBehaviour
     {
         //設定された角度を親との相対角度に変換し保持
         //親との相対角度を基に調整された角度限界を更新し続ける
-        if(parentObject != null)
+        /*if(parentObject != null)
         {
             relativeMin = min - UnityEditor.TransformUtils.GetInspectorRotation(parentObject.transform).z;
             relativeMax = max - UnityEditor.TransformUtils.GetInspectorRotation(parentObject.transform).z;
@@ -25,13 +25,13 @@ public class BoneControl : MonoBehaviour
         {
             adjustedMin = min;
             adjustedMax = max;
-        }
+        }*/
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (parentObject != null)
+        /*if (parentObject != null)
         {
             adjustedMin = UnityEditor.TransformUtils.GetInspectorRotation(parentObject.transform).z + relativeMin;
             adjustedMax = UnityEditor.TransformUtils.GetInspectorRotation(parentObject.transform).z + relativeMax;
@@ -39,6 +39,6 @@ public class BoneControl : MonoBehaviour
         float rotateZ = UnityEditor.TransformUtils.GetInspectorRotation(transform).z;
         float angleZ = Mathf.Clamp(rotateZ, adjustedMin, adjustedMax);
         Vector3 setAngle = new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, angleZ);
-        UnityEditor.TransformUtils.SetInspectorRotation(transform, setAngle);
+        UnityEditor.TransformUtils.SetInspectorRotation(transform, setAngle);*/
     }
 }
