@@ -51,13 +51,24 @@ public class CharaMotion : MonoBehaviour
         //姿勢維持
         if (Input.GetKey(KeyCode.A))
         {
-            bodyRigid.AddRelativeForce(new Vector2(-100f * Time.deltaTime, 0f));
+            bodyRigid.AddRelativeForce(new Vector2(-200f * Time.deltaTime, 0f));
             this.gameObject.transform.localScale = new Vector3(-0.1f, 0.1f, 0.1f);
         }
         if (Input.GetKey(KeyCode.D))
         {
-            bodyRigid.AddRelativeForce(new Vector2(100f * Time.deltaTime, 0f));
+            bodyRigid.AddRelativeForce(new Vector2(200f * Time.deltaTime, 0f));
             this.gameObject.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        }
+        if(!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D)){
+            //無操作状態時、地面に接しているときにブレーキ
+            //立っている面に対して並行に力をかける
+            //力は地面にかかっている力に比例する
+
+
+            //摩擦力F=摩擦係数μ×垂直抗力N
+            float friction=1* Physics.gravity.y * bodyRigid.gravityScale;
+            //bodyRigid.AddRelativeForce(new Vector2(scaleFlag * 10 * Time.deltaTime, 0f));
+            //正なら向きに関係なく右に行く
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -76,6 +87,8 @@ public class CharaMotion : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(origin, direction, legLength+0.1f);
         if (hit.collider != null && hit.collider.tag == "Ground")
         {
+            float force = 0;
+            //地面に立つ
             if (setedIK)//IKは最初はないのでそれの設定が完了したら。
             {
                 target.transform.position = hit.point + hit.normal;
@@ -92,9 +105,9 @@ public class CharaMotion : MonoBehaviour
                         v0 = 0;
                     }
                     v0 = Mathf.Sqrt(-v0);
-                    float a = ((v0 - bodyRigid.velocity.y) / (1/legForce))*Time.deltaTime;
-                    a = a - gravity*0.9f;
-                    bodyRigid.AddRelativeForce(new Vector2(0, a)); //正
+                    force = ((v0 - bodyRigid.velocity.y) / (1/legForce))*Time.deltaTime;
+                    force = force - gravity*0.9f;
+                    bodyRigid.AddRelativeForce(new Vector2(0, force)); //正
                     //投げ上げ式
                     /*
                         y=v0^2/2g 投げ上げの最高点
@@ -106,7 +119,15 @@ public class CharaMotion : MonoBehaviour
                     */
                 }
             }
-
+            //坂を滑り落ちる
+            /*立っている坂の角度を知る
+             重力を坂の角度と坂に対して垂直方向に分解
+            坂の角度方向の力が滑り落ちる力
+            坂に対して垂直方向の力が坂にかけている力*/
+            float groundAngle = Mathf.Atan2(hit.normal.x, hit.normal.y);//立っている地面の角度を知る
+            float slipForce = Mathf.Sin(groundAngle)*force;//滑り落ちる力を求める
+            Debug.Log(Mathf.Abs(Mathf.Sin(groundAngle))* slipForce);
+            bodyRigid.AddRelativeForce(new Vector2(Mathf.Abs(Mathf.Sin(groundAngle)) * slipForce, Mathf.Cos(groundAngle)*slipForce));
         }
         Debug.DrawRay(footRay.origin, footRay.direction * (legLength+0.1f), Color.red);
     }
